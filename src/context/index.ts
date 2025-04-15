@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext } from "react";
-import { Product } from "../types";
+import { Product } from "@/common/types";
 
 const ProductContext = createContext<Product[]>([]);
 

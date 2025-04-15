@@ -1,5 +1,5 @@
+import ProductProvider from "@/context/provider";
 import Homepage from "@/modules/homepage";
-import ProductProvider from "@/common/context/provider";
 
 export default function Home() {
   return (

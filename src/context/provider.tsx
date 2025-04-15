@@ -1,7 +1,7 @@
 "use client";
 
 import ProductContext from ".";
-import { Product } from "../types";
+import { Product } from "@/common/types";
 import data from "@/mock.json";
 import { useState } from "react";
 
