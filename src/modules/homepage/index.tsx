@@ -3,35 +3,32 @@
 
 import { useHomepage } from "./hook";
 import dynamic from "next/dynamic";
-import LikedDislikedCount from "@/components/liked-disliked-count";
 const ProductCard = dynamic(() => import("@/components/product-card"), { ssr: false });
+const NoProducts = dynamic(() => import("@/components/no-products"), { ssr: false });
 
 const Homepage = () => {    
-    const { onSelectedProductDragStart, onSelectedProductDragEnd, onSelectedProductDrag, traverse, productsState, likedProducts, dislikedProducts, nextCardScale} = useHomepage();
+    const { onSelectedProductDragStart, onSelectedProductDragEnd, onSelectedProductDrag, traverse, products, topProductIndex} = useHomepage();
+    const isProductsAvailable = products.length !== topProductIndex;
+
     return (
         <div>
-            <LikedDislikedCount likedProducts={likedProducts} dislikedProducts={dislikedProducts} />
 
             <div className="flex justify-center items-center h-[100vh] bg-gray-100">
-            
-                <div className="relative w-[30vw] h-[70vh]">
-                    {productsState.map((product, index) =>  {
+            {isProductsAvailable ?  
+                <div className="relative h-[65vh]  sm:w-[45vw] md:w-[35vw] lg:w-[30vw] xl:w-[25vw] w-[80vw] " >
 
-                        let style = {};
-                        const isFrontProduct = index === 0;
+                    {products.map((product, index) =>  {
 
-                        if(isFrontProduct) {
-                            style = {
-                                transform: `rotate(${traverse.rotation}deg) translateX(${traverse.x}px) translateY(${traverse.y}px)`,
-                                opacity: traverse.opacity, 
-                                transitionDuration: nextCardScale === 1 || traverse.scale === 0.7 || traverse.scale === 1 ? "0.5s" : "0.05s",
-                                zIndex: 10,
-                                scale: traverse.scale
-                            }
-                        } else if(index === 1) {
-                            style = {zIndex: 5, scale: nextCardScale};
-                        } else {
-                            style = {zIndex: 2, opacity: 0.8, scale: "0.75"};
+                        const {rotation = 0, x= 0,y = 0, scale = 0.4, opacity = 1} = traverse[index] || {};
+                        const isFrontProduct = index === topProductIndex;
+
+                        const style = {
+                            transform: `rotate(${rotation}deg) translateX(${x}px) translateY(${y}px)`,
+                            opacity: opacity, 
+                            transitionDuration: "0.5s",
+                            zIndex: products.length - index,
+                            scale: scale ,
+                            boxShadow: "inset 0 0 15px 0 #c7c7c7"
                         }
 
                         return (
@@ -41,14 +38,15 @@ const Homepage = () => {
                             onDrag={isFrontProduct ? onSelectedProductDrag : undefined} 
                             onDragStart={isFrontProduct ? onSelectedProductDragStart : undefined} 
                             onDragEnd={isFrontProduct ? onSelectedProductDragEnd : undefined} 
-                            style={style}
-                            className={`absolute top-0 left-0 w-full h-full transition-all ease-in-out`}>
-                            <ProductCard product={product} />
+                            className={`absolute top-0 left-0 w-full h-full bg-gray-100 rounded-lg transition-all ease-in-out`}
+                            style={style}                  
+                            >
+                            <ProductCard product={product} index={index} />
                         </div>
                         )
                     })}
+            </div> : <NoProducts />}
                 </div>
-            </div>
         </div>
 
     )

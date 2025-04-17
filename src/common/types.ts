@@ -7,3 +7,11 @@ export type Product = {
     discountPercentage: number;
     imageUrl: string;
 }
+
+export type TraverseState = {
+    rotation?: number;
+    x?: number;
+    y?: number;
+    opacity?: number;
+    scale?: number;
+}
