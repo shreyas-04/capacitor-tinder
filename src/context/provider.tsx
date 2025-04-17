@@ -6,7 +6,7 @@ import data from "@/mock.json";
 import { useState } from "react";
 
 const ProductProvider = ({ children }: { children: React.ReactNode }) => {
-    const [products, setProducts] = useState<Product[]>(data);
+    const [products] = useState<Product[]>(data);
 
     return (
         <ProductContext.Provider value={products}>{children}</ProductContext.Provider>
